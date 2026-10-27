@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 use App\Models\User;
-use Auth;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Http\Request;
 
@@ -27,11 +27,21 @@ class AuthController extends Controller
         );
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
-            return redirect('/userdashboard');
+
+            return Auth::user()->isAdmin()
+                ? redirect()->route('admin.dashboard')
+                : redirect()->route('user.dashboard');
         }
         return back()
             ->withErrors(['email' => 'Email or password is incorrect'])
             ->onlyInput('email');
+    }
+    public function logout(Request $request)
+    {
+        Auth::logout();
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+        return redirect('/');
     }
     public function showRegister()
     {
@@ -48,12 +58,13 @@ class AuthController extends Controller
                 'password' => ['required', 'min:6', 'confirmed'],
             ],
             [
+                'name' => 'Please enter your name',
                 'email.required' => 'Please enter your email',
                 'email.email' => 'Invalid email fomart (@example.com)',
                 'email.unique' => 'This email is already in use',
                 'password.required' => 'Please enter your password',
-                'password.min' => 'password must be 6 digit',
-                'password_confirmation.same' => 'Password confirmation does not match',
+                'password.min' => 'Password must be at least 6 characters',
+                'password_confirmation' => 'Password confirmation does not match',
             ]
         );
         //store in database
@@ -63,7 +74,7 @@ class AuthController extends Controller
             'password' => Hash::make($request->password),
         ]);
         Auth::login($user);
-        return redirect()->to('/userdashboard')->with('success', 'Register successful');//key, value
+        return redirect()->route('user.dashboard')->with('success', 'Register successful');//key, value
 
 
 

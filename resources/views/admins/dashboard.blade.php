@@ -7,7 +7,7 @@
     <title>Document</title>
 </head>
 <body>
-    <h1>dashboard</h1>
-    
+     @extends('layouts.app')
+     <h3>Admin dashboard</h3>
 </body>
 </html>
