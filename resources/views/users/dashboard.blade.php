@@ -8,7 +8,7 @@
 </head>
 <body>
     @extends('layouts.app')
-    <h1>dashboard</h1>
+  
     
 </body>
 </html>

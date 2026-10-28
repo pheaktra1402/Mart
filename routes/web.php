@@ -4,9 +4,8 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', fn () => view('welcome'));
-
-
+Route::get('/home', fn () => view('welcome'))->name('home');
+Route::get('/logout', fn()=>view('login'))->name('logout');
 Route::middleware('guest')->group(function () {
     Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
     Route::post('/login', [AuthController::class, 'login']);

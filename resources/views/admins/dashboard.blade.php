@@ -8,6 +8,6 @@
 </head>
 <body>
      @extends('layouts.app')
-     <h3>Admin dashboard</h3>
+   
 </body>
 </html>
