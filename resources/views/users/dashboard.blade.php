@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="row g-3">
+<div class="row g-3 mx-5">
     <div class="col-md-6">
         <div class="card border-0 shadow-sm h-100">
             <div class="card-body">
@@ -20,9 +20,9 @@
                 @forelse ($orders as $order)
                     <div class="d-flex justify-content-between border-bottom py-2">
                         <span>
-                            {{ $order->id }}
+                            {{-- {{ $order->id }} --}}
                             <small class="text-muted">
-                                · {{ $order->items_count }} items · {{ $order->created_at->format('d M Y') }}
+                                {{ $order->items_count }} items · {{ $order->created_at->format('d M Y') }}
                             </small>
                         </span>
                         <strong>${{ number_format($order->total, 2) }}</strong>

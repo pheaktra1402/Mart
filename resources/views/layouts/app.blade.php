@@ -47,15 +47,16 @@
                         </li>
                     @endguest
 
-                    @auth
-                        <li class="nav-item">
-                           
-                                <a class="nav-link" href="{{ route('admin.dashboard') }}">Admin Dashboard</a>
-                          </li>
-                          <li>
-                                <a class="nav-link" href="{{ route('user.dashboard') }}">My Dashboard</a>
-                           
-                        </li>
+                  @auth
+    @if(auth()->user()->role === 'admin')
+        <li class="nav-item">
+            <a class="nav-link" href="{{ route('admin.dashboard') }}">Admin Dashboard</a>
+        </li>
+    @endif
+
+    <li class="nav-item">
+        <a class="nav-link" href="{{ route('user.dashboard') }}">My Dashboard</a>
+    </li>
 
 
                         <li class="nav-item">
