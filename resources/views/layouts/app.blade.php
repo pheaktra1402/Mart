@@ -3,13 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="icon" type="image/png" href="{{ asset('image/KemraMart_logo.png') }}">
+    <link rel="icon" type="image" href="{{ asset('image/KemraMart_logo.png') }}">
     <title>@yield('title', 'POS Mart')</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body class="d-flex flex-column min-vh-100">
 
-    <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm">
+    <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm sticky">
            <div class="container">
             <a class="navbar-brand fw-bold" href="{{ route('home') }}">
                 <img src="{{ asset('image/KemraMart_logo.png') }}" height="60" alt= "logo"/>
@@ -39,14 +39,22 @@
                             @endif
                         </li>
                         <li>
-                            <a class="nav-link" href="{{ route('user.dashboard') }}">Shop</a>
+                            <a class="nav-link" href="{{ route('shop') }}">Shop</a>
                         </li>
+                       <li class="nav-item">
+              <a class="nav-link" href="{{ route('cart') }}">
+                 Cart
+            <span class="badge rounded-pill bg-dark">
+                {{ collect(session('cart', []))->sum('quantity') }}
+            </span>
+        </a>
+    </li>
                         <span class="navbar-text">Hello</span>
                         <li class="nav-item"><span class="navbar-text">{{ auth()->user()->name }}</span></li>
                         <li class="nav-item">
                             <form method="POST" action="{{ route('logout') }}">
                                 @csrf
-                                <a href="{{ route('logout') }}" type="submit" class="btn btn-outline-dark btn-sm">Logout</a>
+                                <button type="submit" class="btn btn-outline-dark btn-sm">Logout</button>
                             </form>
                         </li>
                     @endauth

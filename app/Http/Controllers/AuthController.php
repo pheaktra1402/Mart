@@ -30,18 +30,19 @@ class AuthController extends Controller
 
             return Auth::user()->isAdmin()
                 ? redirect()->route('admin.dashboard')
-                : redirect()->route('user.dashboard');
+                : redirect()->route('home');
         }
         return back()
             ->withErrors(['email' => 'Email or password is incorrect'])
             ->onlyInput('email');
     }
+
     public function logout(Request $request)
     {
         Auth::logout();
         $request->session()->invalidate();
         $request->session()->regenerateToken();
-        return redirect('/');
+        return redirect('/')->with('success', 'Logged out successfully');
     }
     public function showRegister()
     {
@@ -58,13 +59,13 @@ class AuthController extends Controller
                 'password' => ['required', 'min:6', 'confirmed'],
             ],
             [
-                'name' => 'Please enter your name',
+                'name.required' => 'Please enter your name',
                 'email.required' => 'Please enter your email',
                 'email.email' => 'Invalid email fomart (@example.com)',
                 'email.unique' => 'This email is already in use',
                 'password.required' => 'Please enter your password',
                 'password.min' => 'Password must be at least 6 characters',
-                'password_confirmation' => 'Password confirmation does not match',
+                'password.confirmed' => 'Password confirmation does not match',
             ]
         );
         //store in database
@@ -74,7 +75,7 @@ class AuthController extends Controller
             'password' => Hash::make($request->password),
         ]);
         Auth::login($user);
-        return redirect()->route('user.dashboard')->with('success', 'Register successful');//key, value
+        return redirect()->route('home')->with('success', 'Register successful');//key, value
 
 
 

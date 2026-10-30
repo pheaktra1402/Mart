@@ -136,7 +136,7 @@
     </style>
 </head>
 <body>
-    <main class="login">
+        <main class="login">
         <h1>Log in</h1>
         <p class="intro">Enter your email and password to continue.</p>
 

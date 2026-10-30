@@ -1,11 +1,16 @@
 <?php
-
+use App\Http\Controllers\ShopController;
+use App\Models\Category;
+use App\Models\Product;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/home', fn () => view('welcome'))->name('home');
-Route::get('/logout', fn()=>view('login'))->name('logout');
+Route::get('/', function () {
+    return view('welcome');
+})->name('home');
+Route::get('/logout', [AuthController::class, 'logout'])->name('logout');
+Route::get('/cart', fn () => view('users.cart'))->name('cart');
 Route::middleware('guest')->group(function () {
     Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
     Route::post('/login', [AuthController::class, 'login']);
@@ -17,6 +22,7 @@ Route::middleware('guest')->group(function () {
 Route::middleware('auth')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
     Route::get('/userdashboard', fn () => view('users.dashboard'))->name('user.dashboard');
+    Route::get('/shop', [ShopController::class, 'shop'])->name('shop');
 });
 
 
