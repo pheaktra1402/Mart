@@ -7,10 +7,10 @@
 
     <div class="card shadow-sm border-0" style="max-width: 600px;">
         <div class="card-body">
-            <form method="POST" action="{{ route('admin.products.store') }}">
-                @csrf
-                @include('admins.products.form')
-            </form>
+           <form method="POST" action="{{ route('admin.products.store') }}" enctype="multipart/form-data">
+    @csrf
+    @include('admins.products.form')
+</form>
         </div>
     </div>
 @endsection

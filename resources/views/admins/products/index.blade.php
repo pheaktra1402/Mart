@@ -8,7 +8,7 @@
         <a href="{{ route('admin.products.create') }}" class="btn btn-dark">+ New Product</a>
     </div>
 
-    {{-- Search and filter --}}
+   
     <form method="GET" class="row g-2 mb-3">
         <div class="col-md-5">
             <input type="text" name="search" class="form-control"
@@ -35,6 +35,8 @@
                         <th>#</th>
                         <th>Name</th>
                         <th>Category</th>
+                        <th>Image</th>
+                        <th>Description</th>
                         <th>Price</th>
                         <th>Stock</th>
                         <th class="text-end">Actions</th>
@@ -46,6 +48,17 @@
                             <td>{{ $product->id }}</td>
                             <td>{{ $product->name }}</td>
                             <td>{{ $product->category->name ?? 'Uncategorized' }}</td>
+                           <td>
+    @if ($product->image)
+        <img src="{{ asset('storage/' . $product->image) }}"
+             alt="{{ $product->name }}"
+             width="60" height="60"
+             class="rounded object-fit-cover">
+    @else
+        <span class="text-muted">No image</span>
+    @endif
+</td>
+                            <td>{{ $product->description }}</td>
                             <td>${{ number_format($product->price, 2) }}</td>
                             <td>
                                 <span class="badge {{ $product->stock == 0 ? 'bg-danger' : ($product->stock <= 10 ? 'bg-warning text-dark' : 'bg-success') }}">

@@ -1,14 +1,14 @@
 <?php
 
 namespace App\Http\Controllers\Admin;
-
+use Illuminate\Support\Facades\Storage;
 use App\Http\Controllers\Controller;
 use App\Models\Product;
 use Illuminate\Http\Request;
 
 class StockController extends Controller
 {
-    // List products with their stock
+  
     public function index(Request $request)
     {
         $products = Product::with('category')
@@ -22,7 +22,7 @@ class StockController extends Controller
         return view('admins.stock.index', compact('products'));
     }
 
-    // Show the update-stock form for one product
+   
     public function edit(Product $product)
     {
         $product->load('category');
@@ -30,16 +30,24 @@ class StockController extends Controller
         return view('admins.stock.edit', compact('product'));
     }
 
-    // Add the entered quantity to the current stock
-    public function update(Request $request, Product $product)
-    {
-        $data = $request->validate([
-            'quantity' => ['required', 'integer', 'min:1', 'max:100000'],
-        ]);
+    
+   public function update(Request $request, Product $product)
+{
+    $data = $request->validate([
+        'quantity' => ['required', 'integer', 'min:1'],
+        'image'    => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:2048'],
+    ]);
 
-        $product->increment('stock', $data['quantity']);
-
-        return redirect()->route('admin.stock.index')
-            ->with('success', "Added {$data['quantity']} to {$product->name}. New stock: " . ($product->stock + 0));
+    if ($request->hasFile('image')) {
+        if ($product->image) {
+            Storage::disk('public')->delete($product->image);
+        }
+        $product->image = $request->file('image')->store('products', 'public');
     }
+
+    $product->stock += $data['quantity'];
+    $product->save();
+
+    return redirect()->route('admin.stock.index')->with('success', 'Stock updated.');
+}
 }

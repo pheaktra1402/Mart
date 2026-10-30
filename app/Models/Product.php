@@ -7,7 +7,7 @@ use Illuminate\Database\Schema\Blueprint;
 
 class Product extends Model
 {
-protected $fillable = ['category_id', 'name', 'price', 'stock'];
+protected $fillable = ['category_id', 'name', 'description', 'image','price', 'stock'];
 
 public function category()
 {

@@ -6,21 +6,23 @@ use App\Http\Controllers\Controller;
 use App\Models\Category;
 use App\Models\Product;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class ProductController extends Controller
 {
-    // Validation rules shared by store() and update()
-    private function rules(): array
+    
+    private function rules(bool $isUpdate = false): array
     {
         return [
             'name'        => ['required', 'string', 'max:255'],
             'category_id' => ['required', 'exists:categories,id'],
+            'description' => ['nullable', 'string', 'max:255'],
+            'image'       => [$isUpdate ? 'nullable' : 'required', 'image', 'mimes:jpg,jpeg,png,webp', 'max:2048'],
             'price'       => ['required', 'numeric', 'min:0'],
             'stock'       => ['required', 'integer', 'min:0'],
         ];
     }
 
-    // List products with search and category filter
     public function index(Request $request)
     {
         $products = Product::with('category')
@@ -36,7 +38,6 @@ class ProductController extends Controller
         ]);
     }
 
-    // Show the "new product" form
     public function create()
     {
         return view('admins.products.create', [
@@ -44,16 +45,20 @@ class ProductController extends Controller
         ]);
     }
 
-    // Save a new product
     public function store(Request $request)
     {
-        Product::create($request->validate($this->rules()));
+        $data = $request->validate($this->rules());
+
+        if ($request->hasFile('image')) {
+            $data['image'] = $request->file('image')->store('products', 'public');
+        }
+
+        Product::create($data);
 
         return redirect()->route('admin.products.index')
             ->with('success', 'Product created.');
     }
 
-    // Show the "edit product" form
     public function edit(Product $product)
     {
         return view('admins.products.edit', [
@@ -62,18 +67,32 @@ class ProductController extends Controller
         ]);
     }
 
-    // Save changes to a product
     public function update(Request $request, Product $product)
     {
-        $product->update($request->validate($this->rules()));
+        $data = $request->validate($this->rules(true));
+
+        if ($request->hasFile('image')) {
+            if ($product->image) {
+                Storage::disk('public')->delete($product->image);
+            }
+            $data['image'] = $request->file('image')->store('products', 'public');
+        } else {
+           
+            unset($data['image']);
+        }
+
+        $product->update($data);
 
         return redirect()->route('admin.products.index')
             ->with('success', 'Product updated.');
     }
 
-    // Delete a product
     public function destroy(Product $product)
     {
+        if ($product->image) {
+            Storage::disk('public')->delete($product->image);
+        }
+
         $product->delete();
 
         return redirect()->route('admin.products.index')

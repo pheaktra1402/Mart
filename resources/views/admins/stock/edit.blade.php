@@ -7,15 +7,20 @@
 
     <div class="card shadow-sm border-0" style="max-width: 500px;">
         <div class="card-body">
-            <form method="POST" action="{{ route('admin.stock.update', $product) }}">
-                @csrf
+          <form method="POST" action="{{ route('admin.stock.update', $product) }}" enctype="multipart/form-data">
+                 @csrf
                 @method('PUT')
 
-                {{-- Read-only information --}}
+             
                 <div class="mb-3">
                     <label class="form-label">Product</label>
                     <input type="text" class="form-control" value="{{ $product->name }}" disabled>
                 </div>
+                <input type="file" name="image" accept="image/*"
+           class="form-control @error('image') is-invalid @enderror">
+    @error('image')
+        <div class="invalid-feedback">{{ $message }}</div>
+    @enderror
 
                 <div class="mb-3">
                     <label class="form-label">Category</label>
@@ -28,7 +33,6 @@
                     <input type="text" class="form-control" value="{{ $product->stock }}" disabled>
                 </div>
 
-                {{-- The only editable field --}}
                 <div class="mb-4">
                     <label class="form-label">Quantity to add</label>
                     <input type="number" name="quantity" min="1" step="1"
@@ -37,9 +41,7 @@
                     @error('quantity')
                         <div class="invalid-feedback">{{ $message }}</div>
                     @enderror
-                    <div class="form-text">
-                        New stock will be current stock + this number.
-                    </div>
+                   
                 </div>
 
                 <button type="submit" class="btn btn-dark">Update</button>
