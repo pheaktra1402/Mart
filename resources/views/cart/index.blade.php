@@ -6,12 +6,12 @@
     <div class="container pb-5" style="max-width: 900px;">
         <h3 class="mb-3">Your Cart</h3>
 
-        @if (session('success'))
+        {{-- @if (session('success'))
             <div class="alert alert-success">{{ session('success') }}</div>
         @endif
         @if (session('error'))
             <div class="alert alert-danger">{{ session('error') }}</div>
-        @endif
+        @endif --}}
 
         @if (empty($cart))
             <div class="card border-0 shadow-sm">

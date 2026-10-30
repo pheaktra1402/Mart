@@ -76,17 +76,23 @@
     </nav>
 
     <main class="flex-grow-1">
-        @if(session('success'))
-            <div class="container mt-3">
-                <div class="alert alert-success mb-0">{{ session('success') }}</div>
-            </div>
-        @endif
+    @if(session('success'))
+    <div class="container mt-3">
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            {{ session('success') }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    </div>
+@endif
 
-        @if(session('error'))
-            <div class="container mt-3">
-                <div class="alert alert-danger mb-0">{{ session('error') }}</div>
-            </div>
-        @endif
+     @if(session('error'))
+    <div class="container mt-3">
+        <div class="alert alert-danger alert-dismissible fade show mb-0" role="alert">
+            {{ session('error') }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    </div>
+@endif
 
         @yield('content')
     </main>

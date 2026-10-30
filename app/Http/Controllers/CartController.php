@@ -21,7 +21,7 @@ class CartController extends Controller
         $qty  = ($cart[$product->id]['quantity'] ?? 0) + 1;
 
         if ($qty > $product->stock) {
-            return back()->with('error', "Not enough stock for {$product->name}.");
+            return back()->with('error', "Sorry not enough stock for {$product->name}.");
         }
 
         $cart[$product->id] = [
@@ -41,7 +41,7 @@ class CartController extends Controller
         $data = $request->validate(['quantity' => ['required', 'integer', 'min:1']]);
 
         if ($data['quantity'] > $product->stock) {
-            return back()->with('error', "Only {$product->stock} left for {$product->name}.");
+            return back()->with('error', "Sorry only {$product->stock} left for {$product->name}.");
         }
 
         $cart = session('cart', []);
