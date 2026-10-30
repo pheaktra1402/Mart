@@ -24,9 +24,7 @@
                 @endforeach
             </select>
         </div>
-        <div class="col-md-3">
-            <button type="submit" class="btn btn-outline-dark w-100">Filter</button>
-        </div>
+    
     </form>
 
     <div class="card shadow-sm border-0">

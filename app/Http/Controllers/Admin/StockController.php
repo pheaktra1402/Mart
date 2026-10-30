@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 
 class StockController extends Controller
 {
+    // List products with their stock
     public function index(Request $request)
     {
         $products = Product::with('category')
@@ -21,20 +22,24 @@ class StockController extends Controller
         return view('admins.stock.index', compact('products'));
     }
 
+    // Show the update-stock form for one product
+    public function edit(Product $product)
+    {
+        $product->load('category');
+
+        return view('admins.stock.edit', compact('product'));
+    }
+
+    // Add the entered quantity to the current stock
     public function update(Request $request, Product $product)
     {
         $data = $request->validate([
-            'change' => ['required', 'integer', 'not_in:0'],
+            'quantity' => ['required', 'integer', 'min:1', 'max:100000'],
         ]);
 
-        $newStock = $product->stock + $data['change'];
+        $product->increment('stock', $data['quantity']);
 
-        if ($newStock < 0) {
-            return back()->with('error', "Stock for {$product->name} cannot go below 0.");
-        }
-
-        $product->update(['stock' => $newStock]);
-
-        return back()->with('success', "Stock updated for {$product->name}.");
+        return redirect()->route('admin.stock.index')
+            ->with('success', "Added {$data['quantity']} to {$product->name}. New stock: " . ($product->stock + 0));
     }
 }

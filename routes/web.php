@@ -33,9 +33,10 @@ Route::middleware('auth')->group(function () {
 Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
     Route::get('/dashboard',[DashboardController::class, 'dashboard'])->name('dashboard');
     Route::get('/users', [UserController::class, 'index'])->name('users');
-   
-Route::get('stock', [StockController::class, 'index'])->name('stock.index');
-Route::patch('stock/{product}', [StockController::class, 'update'])->name('stock.update');
+
+    Route::get('stock', [StockController::class, 'index'])->name('stock.index');
+    Route::get('stock/{product}/edit', [StockController::class, 'edit'])->name('stock.edit');
+    Route::put('stock/{product}', [StockController::class, 'update'])->name('stock.update');
     Route::resource('categories',CategoryController::class)->except('show');
     Route::resource('products',ProductController::class)->except('show');
 

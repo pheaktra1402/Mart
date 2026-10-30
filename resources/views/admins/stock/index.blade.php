@@ -17,44 +17,44 @@
                 <option value="out" @selected(request('status') == 'out')>Out of stock</option>
             </select>
         </div>
-        <div class="col-md-3">
-            <button class="btn btn-outline-dark w-100">Filter</button>
-        </div>
+       
     </form>
 
     <div class="card shadow-sm border-0">
         <div class="table-responsive">
-            <table class="table align-middle mb-0">
+            <table class="table table-hover align-middle mb-0">
                 <thead>
                     <tr>
                         <th>Product</th>
                         <th>Category</th>
                         <th>Stock</th>
-                        <th style="width: 260px;">Add to stock</th>
+                        <th class="text-end">Action</th>
                     </tr>
                 </thead>
                 <tbody>
                     @forelse($products as $product)
                         <tr>
-                            <td>{{ $product->name }}</td>
+                            <td>
+                                <a href="{{ route('admin.stock.edit', $product) }}"
+                                   class="text-decoration-none fw-semibold text-dark">
+                                    {{ $product->name }}
+                                </a>
+                            </td>
                             <td>{{ $product->category->name ?? 'Uncategorized' }}</td>
                             <td>
                                 <span class="badge {{ $product->stock == 0 ? 'bg-danger' : ($product->stock <= 10 ? 'bg-warning text-dark' : 'bg-success') }}">
                                     {{ $product->stock }}
                                 </span>
                             </td>
-                            <td>
-                                <form method="POST" action="{{ route('admin.stock.update', $product) }}" class="d-flex gap-2">
-                                    @csrf
-                                    @method('PATCH')
-                                    <input type="number" name="change" class="form-control form-control-sm"
-                                           placeholder="e.g. 20 or -5" required>
-                                    <button class="btn btn-dark btn-sm">Apply</button>
-                                </form>
+                            <td class="text-end">
+                                <a href="{{ route('admin.stock.edit', $product) }}"
+                                   class="btn btn-outline-dark btn-sm">Update Stock</a>
                             </td>
                         </tr>
                     @empty
-                        <tr><td colspan="4" class="text-center text-muted py-4">No products found.</td></tr>
+                        <tr>
+                            <td colspan="4" class="text-center text-muted py-4">No products found.</td>
+                        </tr>
                     @endforelse
                 </tbody>
             </table>

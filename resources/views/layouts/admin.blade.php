@@ -49,10 +49,11 @@
                 <a href="#" class="list-group-item list-group-item-action disabled">
                     Orders
                 </a>
-                <a href="{{ route('admin.stock.index') }}"
+<a href="{{ route('admin.stock.index') }}"
    class="list-group-item list-group-item-action {{ request()->routeIs('admin.stock.*') ? 'active' : '' }}">
     Stock
-</a><a href="{{ route('admin.users') }}"
+</a>
+    <a href="{{ route('admin.users') }}"
                    class="list-group-item list-group-item-action {{ request()->routeIs('admins.users') ? 'active' : '' }}">
                     Users
                 </a>
