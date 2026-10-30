@@ -1,189 +1,311 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-</head>
-<body>
-    @extends('layouts.app')
+@extends('layouts.app')
 
-@section('title', 'KemraMart - Home')
+@section('title', 'Home')
 
 @section('content')
 
-@php
-    
-    $categories = ['Drinks', 'Snacks', 'Fruits', 'Household', 'Meat & Fish', 'Vegetables'];
-
-    $products = [
-        ['name' => 'Coca-Cola 330ml', 'price' => 0.50, 'category' => 'Drinks'],
-        ['name' => 'Potato Chips', 'price' => 1.20, 'category' => 'Snacks'],
-        ['name' => 'Fresh Apples 1kg', 'price' => 3.00, 'category' => 'Fruits'],
-        ['name' => 'Dish Soap', 'price' => 2.50, 'category' => 'Household'],
-        ['name' => 'Mineral Water 1.5L', 'price' => 0.60, 'category' => 'Drinks'],
-        ['name' => 'Instant Noodles', 'price' => 0.35, 'category' => 'Snacks'],
-        ['name' => 'Bananas 1kg', 'price' => 1.50, 'category' => 'Fruits'],
-        ['name' => 'Laundry Powder', 'price' => 4.00, 'category' => 'Household'],
-    ];
-@endphp
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 
 <style>
-    :root {
-        --km-brown: #6b2d12;
-        --km-gold: #e29a2d;
-        --km-cream: #fff8ee;
-    }
-    .btn-km { background: var(--km-brown); color: #fff; border: none; }
-    .btn-km:hover { background: #4f200d; color: #fff; }
-    .btn-gold { background: var(--km-gold); color: #3b1a08; border: none; font-weight: 600; }
-    .btn-gold:hover { background: #cf8a22; color: #3b1a08; }
+.home-hero {
+    background: linear-gradient(135deg, #111827, #212529);
+    padding: 70px 0 90px;
+}
+.home-hero h1 { font-weight: 800; letter-spacing: -1px; }
+.text-gradient {
+    background: linear-gradient(90deg, #ffe082, #ffc107);
+    -webkit-background-clip: text; background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
 
-    .hero {
-        background: linear-gradient(135deg, var(--km-brown) 0%, #9a4a1f 100%);
-        color: #fff;
-    }
-    .hero .badge-gold { background: var(--km-gold); color: #3b1a08; }
+/* Search */
+.search-box {
+    max-width: 620px;
+    margin: 28px auto 0;
+    display: flex;
+    background: #fff;
+    border-radius: 50px;
+    padding: 6px;
+    box-shadow: 0 12px 30px rgba(0,0,0,.25);
+}
+.search-box input {
+    flex: 1; border: 0; outline: 0; background: transparent;
+    padding: 10px 20px; font-size: 16px; min-width: 0;
+}
+.search-box button {
+    border: 0; border-radius: 50px;
+    background: #ffc107; color: #212529; font-weight: 700;
+    padding: 10px 26px;
+    transition: background .2s ease;
+}
+.search-box button:hover { background: #ffb300; }
 
-    .category-card {
-        background: var(--km-cream);
-        border: 1px solid #f0dfc4;
-        border-radius: 12px;
-        transition: transform .2s, box-shadow .2s;
-        text-decoration: none;
-        color: var(--km-brown);
-        font-weight: 600;
-    }
-    .category-card:hover {
-        transform: translateY(-4px);
-        box-shadow: 0 8px 20px rgba(107, 45, 18, .15);
-        color: var(--km-brown);
-    }
+.cat-bar { margin-top: -28px; position: relative; z-index: 2; }
+.cat-scroll {
+    display: flex; gap: 10px; overflow-x: auto;
+    padding: 14px; background: #fff;
+    border-radius: 60px;
+    box-shadow: 0 8px 26px rgba(0,0,0,.08);
+    scrollbar-width: none;
+}
+.cat-scroll::-webkit-scrollbar { display: none; }
+.cat-pill {
+    flex-shrink: 0;
+    padding: 8px 22px; border-radius: 40px;
+    background: #f4f5f7; color: #444;
+    font-weight: 600; font-size: 14px;
+    text-decoration: none !important;
+    transition: all .2s ease;
+}
+.cat-pill:hover { background: #fff3cd; color: #212529; }
+.cat-pill.active { background: #212529; color: #fff; }
 
-    .product-card { border: 0; border-radius: 16px; overflow: hidden; transition: transform .2s, box-shadow .2s; }
-    .product-card:hover { transform: translateY(-4px); box-shadow: 0 10px 24px rgba(0,0,0,.12); }
-    .product-img {
-        height: 140px;
-        background: var(--km-cream);
-        color: var(--km-brown);
-        font-weight: 600;
-        opacity: .85;
-    }
-    .price { color: var(--km-brown); font-weight: 700; }
+/* Products */
+.result-info { color: #777; font-size: 14px; }
 
-    .section-title { color: var(--km-brown); font-weight: 700; }
-    .section-title::after {
-        content: ""; display: block; width: 60px; height: 4px;
-        background: var(--km-gold); border-radius: 2px; margin-top: 8px;
-    }
+.product-card {
+    height: 100%;
+    background: #fff;
+    border: 1px solid #eee;
+    border-radius: 16px;
+    overflow: hidden;
+    transition: transform .25s ease, box-shadow .25s ease;
+}
+.product-card:hover { transform: translateY(-6px); box-shadow: 0 16px 36px rgba(0,0,0,.1); }
 
-    .feature-number {
-        font-size: 36px; font-weight: 800;
-        color: var(--km-gold);
-        line-height: 1;
-    }
-    .cta { background: var(--km-cream); border-radius: 24px; }
+.product-img {
+    position: relative;
+    aspect-ratio: 1 / 1;
+    background: #f4f5f7;
+    display: flex; align-items: center; justify-content: center;
+    color: #ced4da; font-size: 46px;
+    overflow: hidden;
+}
+.product-img img { width: 100%; height: 100%; object-fit: cover; transition: transform .4s ease; }
+.product-card:hover .product-img img { transform: scale(1.06); }
+
+.stock-badge {
+    position: absolute; top: 10px; left: 10px;
+    font-size: 11px; font-weight: 700;
+    padding: 4px 10px; border-radius: 20px;
+}
+.stock-out { background: #dc3545; color: #fff; }
+.stock-low { background: #fff3cd; color: #8a6d00; }
+
+.product-body { padding: 16px; }
+.product-cat { font-size: 11px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: #b88900; }
+.product-name {
+    font-size: 16px; font-weight: 700; color: #212529;
+    margin: 4px 0 6px;
+    display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+}
+.product-price { font-size: 18px; font-weight: 800; color: #212529; }
+
+/* Price on the left, cart button on the right */
+.buy-row {
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 8px; margin-top: 12px;
+}
+.buy-row form { margin: 0; }
+
+.buy-btn {
+    border: 0; border-radius: 10px;
+    padding: 9px 14px;
+    background: #212529; color: #fff;
+    font-weight: 600; font-size: 14px;
+    white-space: nowrap;
+    transition: all .2s ease;
+}
+.buy-btn:hover:not(:disabled) { background: #ffc107; color: #212529; transform: translateY(-2px); }
+.buy-btn:disabled { background: #e9ecef; color: #adb5bd; cursor: not-allowed; }
+
+/* Popular */
+.popular-section { background: #fff; border-top: 1px solid #eee; border-bottom: 1px solid #eee; }
+.popular-title { font-weight: 800; letter-spacing: -.5px; color: #212529; }
+.popular-title i { color: #ff6a00; }
+.popular-badge {
+    position: absolute; top: 10px; left: 10px;
+    background: linear-gradient(135deg, #ff9800, #ff5722);
+    color: #fff; font-size: 11px; font-weight: 700;
+    padding: 4px 10px; border-radius: 20px;
+}
+
+.empty-state { padding: 70px 0; text-align: center; color: #777; }
+.empty-state i { font-size: 52px; color: #ced4da; }
+.view-all {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 8px 18px; border-radius: 40px;
+    border: 1.5px solid #212529; color: #212529;
+    font-weight: 600; font-size: 14px;
+    text-decoration: none !important;
+    white-space: nowrap;
+    transition: all .2s ease;
+}
+.view-all:hover { background: #212529; color: #fff; }
+.view-all:hover i { transform: translateX(3px); }
+.view-all i { transition: transform .2s ease; }
+
+@media (max-width: 575px) {
+    .home-hero { padding: 50px 0 80px; }
+    .home-hero h1 { font-size: 30px; }
+    .product-body { padding: 12px; }
+    .product-name { font-size: 14px; }
+    .product-price { font-size: 16px; }
+    .buy-btn { padding: 8px 11px; font-size: 13px; }
+}
 </style>
 
-<section class="hero py-5">
-    <div class="container py-5 text-center">
-       
-        <h1 class="display-4 fw-bold">Everything you need,<br>all at KemraMart</h1>
-        <p class="lead mt-3 mb-4 opacity-75">
-            Great prices, quality products, and easy shopping from the comfort of your home.
-        </p>
-        <a href="{{ route('shop') }}" class="btn btn-gold btn-lg px-4 me-2">Shop Now</a>
-        @guest
-            <a href="{{ route('register') }}" class="btn btn-outline-light btn-lg px-4">Sign Up</a>
-        @endguest
+{{-- HERO + SEARCH --}}
+<section class="home-hero text-center text-white">
+    <div class="container">
+        <h1 class="display-5"><span class="text-gradient">Khmer</span> Products</h1>
+        <p class="text-white-50 mb-0">Find something special from local Cambodian makers.</p>
+
+        <form action="{{ route('home') }}" method="GET" class="search-box">
+            @if(request('category'))
+                <input type="hidden" name="category" value="{{ request('category') }}">
+            @endif
+            <input type="text" name="search" value="{{ request('search') }}" placeholder="Search products...">
+            <button type="submit"><i class="bi bi-search me-1"></i> Search</button>
+        </form>
     </div>
 </section>
 
-{{-- 2. CATEGORIES --}}
-<section class="container my-5 pt-3">
-    <h3 class="section-title mb-4">Shop by Category</h3>
-    <div class="row g-3">
-        @foreach($categories as $category)
-            <div class="col-6 col-md-4 col-lg-2">
-                <a href="#" class="category-card d-block text-center py-3 px-2 h-100">
-                    {{ $category }}
+<section class="cat-bar">
+    <div class="container">
+        <div class="cat-scroll">
+            <a href="{{ route('home', array_filter(['search' => request('search')])) }}"
+               class="cat-pill {{ request()->filled('category') ? '' : 'active' }}">
+                All
+            </a>
+
+            @foreach ($categories as $category)
+                <a href="{{ route('home', array_filter(['category' => $category->id, 'search' => request('search')])) }}"
+                   class="cat-pill {{ (string) request('category') === (string) $category->id ? 'active' : '' }}">
+                    {{ $category->name }}
                 </a>
-            </div>
-        @endforeach
+            @endforeach
+        </div>
     </div>
 </section>
 
-<section class="container my-5" id="products">
-    <div class="d-flex justify-content-between align-items-end mb-4">
-        <h3 class="section-title mb-0">Popular Products</h3>
-        <a href="{{ route('shop') }}" class="text-decoration-none" style="color: var(--km-brown);">View all →</a>
-    </div>
+@if ($popular && $popular->count())
+<section class="popular-section py-5 mt-5">
+    <div class="container">
+        <div class="mb-4">
+            <h2 class="popular-title h3 mb-1"><i class="bi bi-fire me-1"></i> Popular Products</h2>
+            <p class="text-muted mb-0">Our best sellers, loved by customers.</p>
+        </div>
 
-    <div class="row g-4">
-        @forelse($products as $product)
-            <div class="col-6 col-md-4 col-lg-3">
-                <div class="card product-card h-100 shadow-sm">
-                    <div class="product-img d-flex align-items-center justify-content-center text-center px-2">
-                        {{ $product['category'] }}
-                    </div>
-                    <div class="card-body d-flex flex-column">
-                        <h6 class="card-title">{{ $product['name'] }}</h6>
-                        <p class="price mt-auto mb-2">${{ number_format($product['price'], 2) }}</p>
+        <div class="row g-3 g-md-4">
+            @foreach ($popular as $product)
+                <div class="col-6 col-md-3">
+                    <div class="product-card">
+                        <div class="product-img">
+                            @if ($product->image)
+                                <img src="{{ asset('storage/' . $product->image) }}" alt="{{ $product->name }}" loading="lazy">
+                            @else
+                                <i class="bi bi-image"></i>
+                            @endif
 
-                        @auth
-                            <button class="btn btn-km btn-sm w-100">Add to Cart</button>
-                        @else
-                            <a href="{{ route('login') }}" class="btn btn-outline-dark btn-sm w-100">Login to Buy</a>
-                        @endauth
+                            <span class="popular-badge">
+                                <i class="bi bi-fire"></i> {{ $loop->first ? 'Best seller' : 'Popular' }}
+                            </span>
+                        </div>
+
+                        <div class="product-body">
+                            <div class="product-name">{{ $product->name }}</div>
+
+                            <div class="buy-row">
+                                <div class="product-price">${{ number_format($product->price, 2) }}</div>
+
+                                <form action="{{ url('/cart/add/' . $product->id) }}" method="POST">
+                                    @csrf
+                                    <button type="submit" class="buy-btn" aria-label="Add {{ $product->name }} to cart" {{ $product->stock <= 0 ? 'disabled' : '' }}>
+                                        @if ($product->stock <= 0)
+                                            Sold out
+                                        @else
+                                            <i class="bi bi-cart-plus me-1"></i> Add
+                                        @endif
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
                     </div>
                 </div>
+            @endforeach
+        </div>
+    </div>
+</section>
+@endif
+
+<section class="py-5">
+    <div class="container">
+
+        <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+           <a href="{{ route('shop') }}" class="view-all">
+    View all products <i class="bi bi-arrow-right"></i>
+</a>
+            @if(request('search') || request('category'))
+                <a href="{{ route('home') }}" class="btn btn-sm btn-outline-dark rounded-pill px-3">
+                    <i class="bi bi-x-lg me-1"></i> Clear filters
+                </a>
+            @endif
+        </div>
+
+        @if ($products->count())
+            <div class="row g-3 g-md-4">
+                @foreach ($products as $product)
+                    <div class="col-6 col-md-4 col-lg-3">
+                        <div class="product-card">
+                            <div class="product-img">
+                                @if ($product->image)
+                                    <img src="{{ asset('storage/' . $product->image) }}" alt="{{ $product->name }}" loading="lazy">
+                                @else
+                                    <i class="bi bi-image"></i>
+                                @endif
+
+                                @if ($product->stock <= 0)
+                                    <span class="stock-badge stock-out">Out of stock</span>
+                                @elseif ($product->stock <= 5)
+                                    <span class="stock-badge stock-low">Only {{ $product->stock }} left</span>
+                                @endif
+                            </div>
+
+                            <div class="product-body">
+                                <div class="product-name">{{ $product->name }}</div>
+
+                                <div class="buy-row">
+                                    <div class="product-price">${{ number_format($product->price, 2) }}</div>
+                                    <form action="{{ url('/cart/add/' . $product->id) }}" method="POST">
+                                        @csrf
+                                        <button type="submit" class="buy-btn" aria-label="Add {{ $product->name }} to cart" {{ $product->stock <= 0 ? 'disabled' : '' }}>
+                                            @if ($product->stock <= 0)
+                                                Sold out
+                                            @else
+                                                <i class="bi bi-cart-plus me-1"></i> Add
+                                            @endif
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                @endforeach
             </div>
-        @empty
-            <p class="text-muted">No products available yet.</p>
-        @endforelse
-    </div>
-</section>
 
-<section class="container my-5 py-4">
-    <h3 class="section-title mb-4">Why Choose Us</h3>
-    <div class="row g-4">
-        <div class="col-6 col-lg-3">
-            <div class="feature-number mb-2">01</div>
-            <h6 class="fw-bold">Fast Delivery</h6>
-            <p class="text-muted small">Delivered to your door in the shortest time possible.</p>
-        </div>
-        <div class="col-6 col-lg-3">
-            <div class="feature-number mb-2">02</div>
-            <h6 class="fw-bold">Fair Prices</h6>
-            <p class="text-muted small">Good prices every single day.</p>
-        </div>
-        <div class="col-6 col-lg-3">
-            <div class="feature-number mb-2">03</div>
-            <h6 class="fw-bold">Quality Guaranteed</h6>
-            <p class="text-muted small">Every item is carefully selected.</p>
-        </div>
-        <div class="col-6 col-lg-3">
-            <div class="feature-number mb-2">04</div>
-            <h6 class="fw-bold">Always Here to Help</h6>
-            <p class="text-muted small">Our team is ready whenever you need us.</p>
-        </div>
-    </div>
-</section>
-
-{{-- 5. CTA --}}
-<section class="container mb-5">
-    <div class="cta text-center p-5">
-        <h3 class="fw-bold" style="color: var(--km-brown);">Start shopping with KemraMart today</h3>
-        <p class="text-muted">Sign up for free and track your orders with ease.</p>
-        @guest
-            <a href="{{ route('register') }}" class="btn btn-km btn-lg px-5">Sign Up Now</a>
+            <div class="mt-5 d-flex justify-content-center">
+                {{ $products->links() }}
+            </div>
         @else
-            <a href="{{ route('shop') }}" class="btn btn-km btn-lg px-5">Go to Shop</a>
-        @endguest
+            <div class="empty-state">
+                <i class="bi bi-search"></i>
+                <h5 class="mt-3 text-dark">No products found</h5>
+                <p class="mb-0">Try a different search or category.</p>
+            </div>
+        @endif
+
     </div>
 </section>
 
 @endsection
- 
-</body>
-</html>

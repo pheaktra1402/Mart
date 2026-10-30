@@ -7,10 +7,8 @@
 
     <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-4">
         <div>
-            <h1 class="h3 fw-bold mb-0">Shop</h1>
-            <small class="text-muted">{{ $products->count() }} products available</small>
+            <h1 class="h3 fw-bold mb-0">Shop Now</h1>
         </div>
-
         <form method="GET" action="{{ url()->current() }}" class="d-flex" style="max-width: 320px; width: 100%;">
             <input type="search" name="q" value="{{ request('q') }}"
                    class="form-control me-2" placeholder="Search products...">

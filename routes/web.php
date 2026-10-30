@@ -10,10 +10,13 @@ use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\ShopController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\HomeController;
 
-Route::get('/', fn () => view('welcome'))->name('home');
-   Route::get('/about', fn()=>view('about'))->name('about');
+    Route::get('/', [HomeController::class, 'index'])->name('home');
+    Route::get('/about', fn()=>view('about'))->name('about');
     Route::get('/contact', fn()=>view('contact'))->name('contact');
+
+
 Route::middleware('guest')->group(function () {
     Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
     Route::post('/login', [AuthController::class, 'login']);
