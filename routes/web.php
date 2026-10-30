@@ -2,6 +2,7 @@
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\ProductController;
+use App\Http\Controllers\Admin\StockController;
 use App\Http\Controllers\ShopController;
 use App\Models\Category;
 use App\Models\Product;
@@ -33,6 +34,8 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::get('/dashboard',[DashboardController::class, 'dashboard'])->name('dashboard');
     Route::get('/users', [UserController::class, 'index'])->name('users');
    
+Route::get('stock', [StockController::class, 'index'])->name('stock.index');
+Route::patch('stock/{product}', [StockController::class, 'update'])->name('stock.update');
     Route::resource('categories',CategoryController::class)->except('show');
     Route::resource('products',ProductController::class)->except('show');
 
