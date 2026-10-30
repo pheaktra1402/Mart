@@ -25,10 +25,18 @@
                         <a class="nav-link" href="{{ route('home') }}">Home</a>
                     </li>
 
-                    {{-- Visible to everyone, including visitors --}}
+                 
                     <li class="nav-item">
                         <a class="nav-link" href="{{ route('shop') }}">Shop</a>
                     </li>
+                     <li class="nav-item">
+                                <a class="nav-link" href="{{ route('cart.index') }}">
+                                    Cart
+                                    <span class="badge rounded-pill bg-dark">
+                                        {{ collect(session('cart', []))->sum('quantity') }}
+                                    </span>
+                                </a>
+                            </li>
 
                     @guest
                         <li class="nav-item">
@@ -41,24 +49,14 @@
 
                     @auth
                         <li class="nav-item">
-                            @if(auth()->user()->isAdmin())
+                           
                                 <a class="nav-link" href="{{ route('admin.dashboard') }}">Admin Dashboard</a>
-                            @else
+                          </li>
+                          <li>
                                 <a class="nav-link" href="{{ route('user.dashboard') }}">My Dashboard</a>
-                            @endif
+                           
                         </li>
 
-                        {{-- Cart is for customers only --}}
-                        @unless(auth()->user()->isAdmin())
-                            <li class="nav-item">
-                                <a class="nav-link" href="{{ route('cart') }}">
-                                    Cart
-                                    <span class="badge rounded-pill bg-dark">
-                                        {{ collect(session('cart', []))->sum('quantity') }}
-                                    </span>
-                                </a>
-                            </li>
-                        @endunless
 
                         <li class="nav-item">
                             <span class="navbar-text">Hello, {{ auth()->user()->name }}</span>

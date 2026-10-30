@@ -1,20 +1,18 @@
 <?php
+ use App\Http\Controllers\UserDashboardController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\StockController;
-use App\Http\Controllers\ShopController;
-use App\Models\Category;
-use App\Models\Product;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\CartController;
+use App\Http\Controllers\CheckoutController;
+use App\Http\Controllers\ShopController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', function () {
-    return view('welcome');
-})->name('home');
-Route::get('/logout', [AuthController::class, 'logout'])->name('logout');
-Route::get('/cart', fn () => view('users.cart'))->name('cart');
+Route::get('/', fn () => view('welcome'))->name('home');
+
 Route::middleware('guest')->group(function () {
     Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
     Route::post('/login', [AuthController::class, 'login']);
@@ -22,22 +20,33 @@ Route::middleware('guest')->group(function () {
     Route::post('/register', [AuthController::class, 'store']);
 });
 
-
 Route::middleware('auth')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
-    Route::get('/userdashboard', fn () => view('users.dashboard'))->name('user.dashboard');
+   
+
+    Route::get('/userdashboard', [UserDashboardController::class, 'index'])->name('user.dashboard');
+
+    // Shop
     Route::get('/shop', [ShopController::class, 'shop'])->name('shop');
+
+    // Cart
+    Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
+    Route::post('/cart/add/{product}', [CartController::class, 'add'])->name('cart.add');
+    Route::put('/cart/{product}', [CartController::class, 'update'])->name('cart.update');
+    Route::delete('/cart/{product}', [CartController::class, 'remove'])->name('cart.remove');
+
+    // Checkout
+    Route::post('/checkout', [CheckoutController::class, 'store'])->name('checkout.store');
 });
 
-
 Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
-    Route::get('/dashboard',[DashboardController::class, 'dashboard'])->name('dashboard');
+    Route::get('/dashboard', [DashboardController::class, 'dashboard'])->name('dashboard');
     Route::get('/users', [UserController::class, 'index'])->name('users');
 
     Route::get('stock', [StockController::class, 'index'])->name('stock.index');
     Route::get('stock/{product}/edit', [StockController::class, 'edit'])->name('stock.edit');
     Route::put('stock/{product}', [StockController::class, 'update'])->name('stock.update');
-    Route::resource('categories',CategoryController::class)->except('show');
-    Route::resource('products',ProductController::class)->except('show');
 
+    Route::resource('categories', CategoryController::class)->except('show');
+    Route::resource('products', ProductController::class)->except('show');
 });
